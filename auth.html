@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Firebase Authentication Example</title>
+    <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+
+    <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
+    
+  </head>
+  <body>
+    <h1>Firebase Authentication Example</h1>
+    <div id="user-signed-out" class="hidden">
+      <h2>You are signed out</h2>
+      <button id="sign-in-button">Sign in with Google</button>
+    </div>
+    <div id="user-signed-in" class="hidden">
+      <h2>Welcome, <span id="user-display-name"></span></h2>
+      <p>Your email address is <span id="user-email"></span></p>
+      <button id="sign-out-button">Sign out</button>
+    </div>
+    <script type="module">
+      // Initialize Firebase
+      const firebaseConfig = {
+          apiKey: "AIzaSyABuFxBVP6GjKEg-k6_ui7Zw3Z41eAC3R0",
+          authDomain: "blog-daffadev.firebaseapp.com",
+          databaseURL: "https://blog-daffadev.firebaseio.com",
+          projectId: "blog-daffadev",
+          storageBucket: "blog-daffadev.appspot.com",
+          messagingSenderId: "663444898328",
+          appId: "1:663444898328:web:588bb340a67843219c796d",
+          measurementId: "G-8X0KCP283G"
+      };
+      firebase.initializeApp(firebaseConfig);
+
+      // Get a reference to the authentication service
+      const auth = firebase.auth();
+
+      // UI elements
+      const userSignedOutDiv = document.getElementById('user-signed-out');
+      const userSignedInDiv = document.getElementById('user-signed-in');
+      const userDisplayName = document.getElementById('user-display-name');
+      const userEmail = document.getElementById('user-email');
+      const signInButton = document.getElementById('sign-in-button');
+      const signOutButton = document.getElementById('sign-out-button');
+
+      // Hide or show UI elements based on user authentication state
+      function toggleUI() {
+        if (auth.currentUser) {
+          userSignedOutDiv.classList.add('hidden');
+          userSignedInDiv.classList.remove('hidden');
+          userDisplayName.textContent = auth.currentUser.displayName;
+          userEmail.textContent = auth.currentUser.email;
+        } else {
+          userSignedOutDiv.classList.remove('hidden');
+          userSignedInDiv.classList.add('hidden');
+        }
+      }
+
+      // Event listeners
+      signInButton.addEventListener('click', () => {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(provider);
+      });
+
+      signOutButton.addEventListener('click', () => {
+        auth.signOut();
+      });
+
+      // Listen for authentication state changes
+      auth.onAuthStateChanged(user => {
+        toggleUI();
+      });
+    </script>
+  </body>
+</html>
+
